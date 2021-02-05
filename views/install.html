@@ -1,0 +1,55 @@
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.9/dist/spectre.min.css">
+<link rel="stylesheet" type="text/css" href="/static/main.css">
+<title>OneAdmin Install</title>
+<body>
+<header class="navbar header">
+  <section class="navbar-section">
+    <a href="/" class="navbar-brand">OneAdmin</a>
+  </section>
+</header>
+<div class="main">
+    <div class="container grid-sm">
+        <form method="post" action="/install/" id="install-form">
+            <div class="form-group">
+                <select name="one_type" class="form-select">
+                    <option value="OneDrive">OneDrive</option>
+                    <option value="SharePoint">SharePoint</option>
+                    <option value="GoogleDrive">GoogleDrive</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input class="form-input" type="text" name="name" value="" placeholder="name">
+            </div>
+            <div class="form-group">
+                <input class="form-input" type="text" name="client_id" value="" placeholder="client_id">
+            </div>
+            <div class="form-group">
+                <input class="form-input" type="text" name="client_secret" value="" placeholder="client_secret">
+            </div>
+            <div class="form-group">
+                <input class="form-input" type="text" name="tenant_id" value="" placeholder="tenant_id">
+            </div>
+            <div class="form-group">
+                <input class="form-input" type="text" name="object_id" value="" placeholder="object_id">
+            </div>
+            <div class="form-group">
+                <label class="form-checkbox">
+                    <input type="checkbox">
+                    <i class="form-icon"></i> 管理员
+                </label>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-block btn-danger btn-lg">Install</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

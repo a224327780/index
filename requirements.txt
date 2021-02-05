@@ -1,0 +1,4 @@
+bottle
+pymongo
+dnspython
+gunicorn
