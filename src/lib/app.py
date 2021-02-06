@@ -13,7 +13,7 @@ from src.lib.onedrive import OneDrive
 DEFAULT_FORMATTER = '%(asctime)s[%(filename)s:%(lineno)d][%(levelname)s]:%(message)s'
 logging.basicConfig(format=DEFAULT_FORMATTER, level=logging.INFO)
 
-mongo_uri = 'mongodb+srv://root:hack3321@cluster0.9v4wz.azure.mongodb.net/?retryWrites=true&w=majority'
+mongo_uri = ''
 
 
 class IndexApp:
