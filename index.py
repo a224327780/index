@@ -1,12 +1,9 @@
-import json
 import logging
 import os
-from importlib import import_module
 
-from bottle import request, static_file, default_app, response, redirect
+from bottle import request, static_file, default_app, redirect
 
-from src.common import fail, IndexApp
-from src.onedrive import OneDrive, OneDriveException
+from src.common import IndexApp, run_route
 
 DEFAULT_FORMATTER = '%(asctime)s[%(filename)s:%(lineno)d][%(levelname)s]:%(message)s'
 logging.basicConfig(format=DEFAULT_FORMATTER, level=logging.INFO)
@@ -23,7 +20,7 @@ app = default_app()
 
 @app.route('/favicon.ico')
 def favicon():
-    return 'favicon.png'
+    return static_file('favicon.png', root='static')
 
 
 @app.route('/static/<filename:path>')
@@ -32,41 +29,30 @@ def send_static(filename):
 
 
 @app.route('/', method='GET')
-@app.route('/:name', method='GET')
-def index(name=None):
-    return IndexApp.render('index')
+def index():
+    drives = IndexApp.get_drives()
+    if len(drives):
+        for k, v in drives.items():
+            redirect(f'/{v[0]["_id"]}')
+    redirect('/install')
 
 
 @app.route('/install', method=['GET', 'POST'])
 @app.route('/install/:action/:name', method=['GET', 'POST'])
-def install(controller, action=None, name=None):
+def install(action=None, name=None):
     if name:
         request.query['name'] = name
-
-    m = import_module('src.api.install')
-    if not action:
-        action = 'index'
-
-    one_drive = OneDrive()
-    _action = f'{controller}_{action}'
-    return getattr(m, f'{controller}_{action}')(one_drive)
+    return run_route('install', action)
 
 
-# @app.error(500)
-# def error500(e1):
-#     if isinstance(e1.exception, OneDriveException):
-#         data = json.loads(e1.exception.message)
-#         error = data.get('error')
-#         response.content_type = 'application/json'
-#         return json.dumps(fail(error.get('message'), data=data))
-#
-#     if request.is_ajax:
-#         response.content_type = 'application/json'
-#         return json.dumps(fail(str(e1.exception), data=e1.traceback))
-#
-#     if e1.traceback:
-#         return app.default_error_handler(e1)
-#     return e1.body
+@app.route('/:name', method='GET')
+@app.route('/:name/<path:path>')
+def file(name, path=None):
+    request.query['name'] = name
+    if path:
+        request.query['folder'] = path
+    return run_route('file', 'index')
+
 
 @app.error(404)
 def error404(e1):

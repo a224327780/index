@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.9/dist/spectre.min.css">
+<link rel="stylesheet" href="/static/main.css">
+<link rel="shortcut icon" href=/static/favicon.png>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@1.11.0/dist/jquery.min.js"></script>
+<script type="text/javascript" src="/static/main.js"></script>
+<title>OneIndex</title>
+</head>
+<script type="text/javascript">window.page_url = '{{!request.url}}';</script>
+<body>
+<div class="main">
+    <div class="left">
+        <a href="/" class="navbar-brand">OneIndex</a>
+        <ul class="nav nav-menu">
+            % for one_type, driver_items in drives.items():
+            <li class="nav-item">
+                <a href="javascript:void(0);">{{one_type.upper()}}</a>
+                <ul class="nav nav-sub">
+                    % for item in driver_items:
+                    % if item['_id'] == name:
+                    <li class="nav-item active">
+                        % else:
+                    <li class="nav-item">
+                        % end
+                        <a href="/{{item['_id']}}">{{item['_id']}}</a>
+                    </li>
+                    % end
+                </ul>
+            </li>
+            % end
+        </ul>
+    </div>
+    <div class="right">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/">Index</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/{{name}}">{{name}}</a>
+            </li>
+        </ul>
+        <div class="container">
+            <div class="main-content">
+                <div class="columns toolbar">
+                    <div class="column col-3">
+                        <a data-href="{{!request.url.replace('index', 'upload')}}" class="btn btn-dark btn-lg ajax-modal">上传文件</a>
+                        <a data-href="{{!request.url.replace('index', 'folder')}}" class="btn btn-danger btn-lg ajax-modal">新建文件夹</a>
+                    </div>
+                </div>
+                % if type(file_items) == list:
+                <table class="table" data-page="{{page_url}}">
+                    <thead>
+                        <tr>
+                            <th>文件名</th>
+                            <th>修改时间</th>
+                            <th>大小</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    % include('data.html', items=file_items)
+                    </tbody>
+                </table>
+                % else:
+                <div class="empty">
+                    <p class="empty-title h5">用户未开通OneDrive</p>
+                </div>
+                %end
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

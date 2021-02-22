@@ -1,36 +1,42 @@
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="renderer" content="webkit">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.9/dist/spectre.min.css">
-<link rel="stylesheet" type="text/css" href="/static/main.css">
-<title>Index Install</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.9/dist/spectre.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/main.css">
+    <link rel="shortcut icon" href=/static/favicon.png>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@1.11.0/dist/jquery.min.js"></script>
+    <title>OneIndex Install</title>
 <body>
 <header class="navbar header">
-  <section class="navbar-section">
-    <a href="/" class="navbar-brand">Index</a>
-  </section>
+    <section class="navbar-section">
+        <a href="/" class="navbar-brand">Index</a>
+    </section>
 </header>
 <div class="main">
     <div class="container grid-sm">
         <form method="post" action="/install" id="install-form">
             <div class="form-group">
                 <select name="drive_type" class="form-select">
-                    <option value="OneDrive">OneDrive</option>
-                    <option value="SharePoint">SharePoint</option>
-                    <option value="GoogleDrive">GoogleDrive</option>
+                    % for k in ['OneDrive', 'SharePoint']:
+                    <option value="{{k}}"{{" selected" if data.get("drive_type") == k else ""}}>{{k}}</option>
+                    % end
+<!--                    <option value="GoogleDrive">GoogleDrive</option>-->
                 </select>
             </div>
-            <div class="form-group">
-                <input class="form-input" type="text" name="name" value="" placeholder="name">
+            <div class="form-group d-none">
+                <input class="form-input" type="text" name="site_id" value="" placeholder="站点">
             </div>
             <div class="form-group">
-                <input class="form-input" type="text" name="client_id" value="" placeholder="client_id">
+                <input class="form-input" type="text" name="name" value="{{data.get('name', '')}}" placeholder="name">
             </div>
             <div class="form-group">
-                <input class="form-input" type="text" name="client_secret" value="" placeholder="client_secret">
+                <input class="form-input" type="text" name="client_id" value="{{data.get('client_id', '')}}" placeholder="client_id">
+            </div>
+            <div class="form-group">
+                <input class="form-input" type="text" name="client_secret" value="{{data.get('client_secret', '')}}" placeholder="client_secret">
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-block btn-danger btn-lg">Install</button>
@@ -38,5 +44,18 @@
         </form>
     </div>
 </div>
+<script type="text/javascript">
+    $(function () {
+        $('[name="drive_type"]').change(function () {
+            let $val = $(this).val();
+            let s = $('[name="site_id"]').parent('.form-group');
+            if ($val === 'SharePoint') {
+                s.removeClass('d-none');
+            } else {
+                s.addClass('d-none');
+            }
+        })
+    })
+</script>
 </body>
 </html>

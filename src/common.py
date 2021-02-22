@@ -8,7 +8,19 @@ from importlib import import_module
 from bottle import request, template, redirect, abort
 from pymongo import MongoClient
 
-from src.onedrive import OneDrive
+from src.drives.onedrive import OneDrive
+
+
+def run_route(controller, action=None):
+    m = import_module(f'src.api.{controller}')
+    if not action:
+        action = 'index'
+
+    one_drive = OneDrive()
+    if controller != 'install':
+        IndexApp.before_request(one_drive)
+
+    return getattr(m, f'{controller}_{action}')(one_drive)
 
 
 def success(data=None, message=''):
@@ -47,7 +59,7 @@ class IndexApp:
             mongo_uri = os.environ.get('MONGO_URI')
             client = MongoClient(mongo_uri, connectTimeoutMS=5000, socketTimeoutMS=5000)
             db = client.get_database('db0')
-            cls.mongo_db = db['index']
+            cls.mongo_db = db['oneindex']
         return cls.mongo_db
 
     @classmethod
@@ -70,9 +82,16 @@ class IndexApp:
         mongodb = cls.get_mongo()
         params = {
             'access_token': data.get('access_token'),
+            'refresh_token': data.get('refresh_token'),
             'expires_time': int(time.time()) + 3500,
-            'update_date': get_time()
+            'update_date': get_time(),
         }
+        site_id = data.get('site_id')
+        if site_id:
+            params['site_id'] = site_id
+        # scope = data.get('scope')
+        # if scope:
+        #     params['scope'] = scope
         return mongodb.update_one({'_id': name}, {'$set': params}).modified_count
 
     @classmethod
@@ -85,27 +104,31 @@ class IndexApp:
         return mongodb.find_one({'_id': _id})
 
     @classmethod
-    def render(cls, tpl_name, layout=True, **kwargs):
-        _id = request.query.get('id')
-        kwargs.setdefault('_id', _id)
+    def render(cls, tpl_name, **kwargs):
+        name = request.query.get('name')
+        kwargs.setdefault('name', name)
         kwargs.setdefault('request', request)
-        content = template(f'{tpl_name}.html', **kwargs)
-        if not layout:
-            return content
         drives = cls.get_drives()
-        return template('layout.html', content=content, drives=drives, **kwargs)
+        kwargs.setdefault('drives', drives)
+        return template(f'{tpl_name}.html', **kwargs)
 
     @classmethod
     def before_request(cls, one_drive: OneDrive):
-        _id = request.query.get('id')
+        _id = request.query.get('name')
         data = cls.get_drive(_id)
         if not data:
             redirect('/')
 
+        if data.get('drive_type') == 'OneDrive':
+            request.query['user_id'] = 'me'
+
+        if data.get('drive_type') == 'SharePoint':
+            request.query['site_id'] = data['site_id']
+
         not_time = int(time.time())
         expires_time = int(data.get('expires_time'))
         if expires_time <= not_time:
-            _data = one_drive.get_ms_token(**data)
+            _data = one_drive.refresh_token(**data)
 
             access_token = _data.get('access_token')
             if not access_token:
