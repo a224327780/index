@@ -10,14 +10,16 @@ def install_index(one_drive: OneDrive):
         name = request.query.get('name')
         if name:
             data = IndexApp.get_mongo().find_one({'_id': name})
-        return template('install.html',  data=data)
+        return template('install.html', data=data)
 
     params = dict(request.forms)
+    params['_id'] = params['id']
+    del params['id']
+
     IndexApp.install(params)
 
     params['state'] = f"{request.url}/auth/{params.get('name')}"
     url = one_drive.authorize_url(**params)
-    print(url)
     redirect(url)
 
 

@@ -70,7 +70,7 @@ class IndexApp:
     def get_drives(cls):
         groups = {}
         mongodb = cls.get_mongo()
-        for item in mongodb.find({}, {'_id': 1, 'drive_type': 1}).sort('drive_type', 1).sort('_id', 1):
+        for item in mongodb.find({}, {'_id': 1, 'drive_type': 1, 'name': 1}).sort('drive_type', 1).sort('_id', 1):
             drive_type = item.get('drive_type')
             if not groups.get(drive_type):
                 groups[drive_type] = []
