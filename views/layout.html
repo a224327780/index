@@ -6,16 +6,17 @@
 <meta name="renderer" content="webkit">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.9/dist/spectre.min.css">
-<link rel="stylesheet" type="text/css" href="/static/main.css">
+<link rel="stylesheet" href="/static/main.css">
+<link rel="shortcut icon" href=/static/favicon.png>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@1.11.0/dist/jquery.min.js"></script>
 <script type="text/javascript" src="/static/main.js"></script>
-<title>OneAdmin</title>
+<title>Index</title>
 </head>
-<script type="text/javascript">window.page_url = '{{request.url}}';</script>
+<script type="text/javascript">window.page_url = '{{!request.url}}';</script>
 <body>
 <div class="main">
     <div class="left">
-        <a href="/" class="navbar-brand">OneAdmin</a>
+        <a href="/" class="navbar-brand">Index</a>
         <ul class="nav nav-menu">
             % for type, items in drives.items():
             <li class="nav-item">
@@ -27,7 +28,7 @@
                         % else:
                     <li class="nav-item">
                         % end
-                        <a href="/user/list?id={{item['_id']}}">{{item['_id']}}</a>
+                        <a href="/{{item['_id']}}">{{item['_id']}}</a>
                     </li>
                     % end
                 </ul>
@@ -42,12 +43,12 @@
             </li>
             % if _id:
             <li class="breadcrumb-item">
-                <a href="/user/list?id={{_id}}">{{_id}}</a>
+                <a href="/{{_id}}">{{_id}}</a>
             </li>
             % end
         </ul>
         <div class="container">
-            <div class="content">
+            <div class="main-content">
                 {{!content}}
             </div>
         </div>

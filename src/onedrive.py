@@ -36,8 +36,6 @@ class OneDrive:
         self._token_url = 'https://login.microsoftonline.com/{}/oauth2/v2.0/token'
         self.access_token = None
         self._redirect_uri = 'https://ouath.atcaoyufei.workers.dev'
-        self.admin_scope = 'offline_access User.ReadWrite.All Sites.ReadWrite.All Directory.ReadWrite.All ' \
-                           'Directory.AccessAsUser.All'
         self.scope = 'offline_access Sites.ReadWrite.All'
         self.logger = logging.getLogger(self.__class__.__name__)
         self.file_fields = 'id, name, size, folder, audio, video, photo, image, lastModifiedDateTime'
@@ -81,12 +79,12 @@ class OneDrive:
     def file_list(self, folder: str = None, **kwargs):
         dest = '/children'
         if folder and folder != '/':
-            dest = ':/{}:/children'.format(folder)
+            dest = ':/{}:/children'.format(folder.strip('/'))
 
         drive = _get_drive(**kwargs)
         fields = kwargs.get('fields') or self.file_fields
 
-        params = {'select': fields, '$top': kwargs.get('limit') or 20}
+        params = {'select': fields, '$top': kwargs.get('limit') or 25}
         # '$expand': 'thumbnails($select=large)'
         return self.api(f'{drive}{dest}', params)
 
@@ -94,9 +92,22 @@ class OneDrive:
         drive = _get_drive(**kwargs)
         return self.api(f'{drive}:/{file}', method='DELETE', timeout=10)
 
-    def get_file(self, file: str, **kwargs):
+    def get_file(self, file_id: str, **kwargs):
         drive = _get_drive(**kwargs)
-        return self.api(f'{drive}:/{file}', params={'$select': 'id,@microsoft.graph.downloadUrl'})
+        return self.api(f'{drive}:/{file_id}')
+
+    def create_folder(self, parent_folder: str, folder_name: str, **kwargs):
+        drive = _get_drive(**kwargs)
+        json_data = {
+            '@microsoft.graph.conflictBehavior': 'fail',
+            'folder': {'childCount': 1},
+            'name': folder_name
+        }
+        dest = '/children'
+        if parent_folder and parent_folder != '/':
+            dest = ':/{}:/children'.format(parent_folder.strip('/'))
+        print(json_data)
+        return self.api(f'{drive}{dest}', json=json_data)
 
     def get_drives(self, user_id, **kwargs):
         return self.api(f'/users/{user_id}/drives')
@@ -185,6 +196,9 @@ class OneDrive:
         subscribed_list = self.api('/subscribedSkus')
         result = []
         for i in subscribed_list['value']:
+            if i['skuId'] == '6470687e-a428-4b7a-bef2-8a291ad947c9':
+                continue
+
             if i['capabilityStatus'] == 'Enabled':
                 sku_name = SKU_MAP.get(i['skuId'], i['skuId'])
                 result.append({'status': i['capabilityStatus'], 'sku_id': i['skuId'], 'sku_name': sku_name,
@@ -192,13 +206,21 @@ class OneDrive:
         return result
 
     def user_list(self, **kwargs):
-        params = {'$select': 'id,displayName,accountEnabled,userPrincipalName,assignedLicenses',
-                  '$top': kwargs.get('top', 30),
-                  # '$filter': "startsWith(displayName, 'cao')"
-                  # '$orderby': 'displayName desc',
-                  # '$filter': 'assignedLicenses/any(x:x/skuId gt 9)'
-                  }
-        # params.update(kwargs)
+        search = kwargs.get('search', '')
+        _filter = kwargs.get('filter', '')
+        params = {
+            '$select': 'id,displayName,accountEnabled,userPrincipalName,assignedLicenses',
+            '$top': kwargs.get('top', 30),
+            '$orderby': 'displayName desc',
+        }
+        if _filter:
+            params['$filter'] = _filter
+
+        if search:
+            params['$search'] = f'"{search}"'
+            params['$count'] = 'true'
+            self.http.headers['ConsistencyLevel'] = 'eventual'
+
         return self.api("/users", params=params)
 
     def delete_user(self, user):
@@ -251,7 +273,7 @@ class OneDrive:
             'client_id': kwargs.get('client_id') or self.default_client_id,
             'redirect_uri': kwargs.get('redirect_uri', self._redirect_uri),
             'client_secret': kwargs.get('client_secret') or self.default_client_secret,
-            'scope': kwargs.get('scope') or self.admin_scope,
+            'scope': kwargs.get('scope') or self.scope,
         }
 
     def refresh_token(self, **kwargs) -> dict:
@@ -268,13 +290,13 @@ class OneDrive:
 
         if method is None:
             method = 'GET'
+
+        # kwargs.setdefault('proxies', {'http': 'http://127.0.0.1:1081', 'https': 'http://127.0.0.1:1081'})
         response = self.http.request(method, url, data=data, **kwargs)
         if response.ok:
             return response
 
-        # data = response.json()
-        # error = data.get('error')
-        raise Exception(response.url, response.status_code, response.text)
+        raise OneDriveException(response.url, response.status_code, response.text)
 
     def get_sku_name(self, sku_id):
         self.logger.debug(sku_id)
@@ -285,3 +307,11 @@ class OneDrive:
 
     def get_share_point_info(self, d='d30'):
         return self.api(f"/reports/getSharePointSiteUsageDetail(period='{d}')", allow_redirects=False)
+
+
+class OneDriveException(Exception):
+
+    def __init__(self, api, status_code, message):
+        self.api = api
+        self.status_code = status_code
+        self.message = message

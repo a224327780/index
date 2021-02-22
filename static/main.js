@@ -17,10 +17,47 @@ App.tip = function (message, time) {
 $(function () {
     $(document).on('click', '.ajax', function () {
         let $this = $(this);
-        $this.addClass('loading');
-        $.getJSON($this.data('href'), function (result) {
-            // $this.removeClass('loading');
-            window.location.reload();
+        let tr = $this.parents('tr')
+
+        $.ajax({
+            type: 'GET',
+            url: $this.data('href'),
+            dataType: 'json',
+            context: $this,
+            beforeSend: function () {
+                tr.addClass('tr-opacity')
+            },
+            error: function (jqXHR, statusText, error) {
+                let data = JSON.parse(jqXHR.responseText)
+                App.tip(data['msg'], 5000);
+                tr.removeClass('tr-opacity')
+            },
+            success: function (result) {
+                tr.remove();
+            }
+        });
+    });
+
+    $(document).on('click', '.submit', function () {
+        let $this = $(this);
+        let $form = $this.parents('form')
+        $.ajax({
+            type: 'POST',
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            dataType: 'json',
+            context: $this,
+            beforeSend: function () {
+                $this.addClass('loading')
+            },
+            error: function (jqXHR, statusText, error) {
+                let data = JSON.parse(jqXHR.responseText)
+                App.tip(data['msg'], 5000);
+                $this.removeClass('loading')
+            },
+            success: function (result) {
+                window.location.reload();
+            }
         });
     });
 
@@ -53,12 +90,13 @@ $(function () {
         if (scrollTop + windowHeight >= scrollHeight - 50) {
             let table = $('.table')
             let page_url = table.data('page')
-            console.log(page_url)
             if (page_url && !window.load_url[page_url]) {
                 window.load_url[page_url] = page_url
+                $('.loading').removeClass('d-none')
                 $.get(window.page_url, {'page': page_url}, function (data) {
                     table.find('tbody').append(data['html'])
                     table.data('page', data['page_url'])
+                    $('.loading').addClass('d-none')
                 });
             }
         }
