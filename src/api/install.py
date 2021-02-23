@@ -40,9 +40,12 @@ def install_auth(one_drive: OneDrive):
                 one_data['site_id'] = site['id']
                 break
 
-    print(one_data)
+    one_drive.access_token = one_data.get('access_token')
+    user_info = one_drive.user_info()
+    one_data['username'] = user_info['userPrincipalName']
+
     IndexApp.save_token(name, one_data)
     if data['drive_type'] == 'SharePoint' and not one_data.get('site_id'):
-        return 'Site: <b>{data["site_id"]}</b> Not Found'
+        return f'Site: <b>{data["site_id"]}</b> Not Found'
 
     redirect(f'/{name}')

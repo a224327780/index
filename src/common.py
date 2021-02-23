@@ -91,9 +91,9 @@ class IndexApp:
         site_id = data.get('site_id')
         if site_id:
             params['site_id'] = site_id
-        # scope = data.get('scope')
-        # if scope:
-        #     params['scope'] = scope
+        username = data.get('username')
+        if username:
+            params['username'] = username
         return mongodb.update_one({'_id': name}, {'$set': params}).modified_count
 
     @classmethod

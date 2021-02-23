@@ -27,7 +27,7 @@ class OneDrive:
         self._token_url = 'https://login.microsoftonline.com/{}/oauth2/v2.0/token'
         self.access_token = None
         self._redirect_uri = 'https://oneindex.atcaoyufei.workers.dev'
-        self.scope = 'offline_access Sites.ReadWrite.All'
+        self.scope = 'offline_access User.Read Sites.ReadWrite.All'
         self.logger = logging.getLogger(self.__class__.__name__)
         self.file_fields = 'id, name, size, folder, audio, video, photo, image, lastModifiedDateTime'
         self.default_client_id = ''
@@ -54,6 +54,9 @@ class OneDrive:
     def site_list(self):
         api_params = {'search': '*', '$top': 30, '$select': '*'}
         return self.api('/sites', api_params)
+
+    def user_info(self):
+        return self.api('/me')
 
     def upload_file(self, file_name, file_data, **kwargs):
         drive = _get_drive(**kwargs)

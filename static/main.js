@@ -72,8 +72,13 @@ $(function () {
         }
         let formData = new FormData();
         let file = this.files[0];
-        formData.append('file', file);
         console.log(file)
+
+        formData.append('file', file);
+        if (file.size > 1024 * 1024 * 4) {
+            App.tip('文件不能超过4M')
+            return false;
+        }
 
         let xhr = new XMLHttpRequest();
         xhr.open("POST", $('.upload-btn').data('href'));
@@ -87,7 +92,7 @@ $(function () {
         xhr.addEventListener('load', function (e) {
             App.tip('upload done.');
             progress.addClass('d-none');
-            // window.location.reload();
+            window.location.reload();
             console.log(e);
         }, false);
         xhr.send(formData);
