@@ -53,6 +53,7 @@ def get_time():
 class IndexApp:
     app = None
     mongo_db = None
+    drive_data = None
 
     @classmethod
     def get_mongo(cls):
@@ -132,6 +133,7 @@ class IndexApp:
         if data.get('drive_type') == 'SharePoint':
             request.query['site_id'] = data['site_id']
 
+        cls.drive_data = data
         not_time = int(time.time())
         expires_time = int(data.get('expires_time'))
         if expires_time <= not_time:

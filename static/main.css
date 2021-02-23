@@ -1,12 +1,4 @@
 @charset "UTF-8";
-@font-face {
-    font-family: 'Satisfy';
-    font-style: normal;
-    font-weight: 400;
-    src: local('Satisfy Regular'), local('Satisfy-Regular'), url(/static/fonts/satisfy.woff2) format('woff2');
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
 html {
     font-size: 14px;
     text-rendering: optimizeLegibility;
@@ -215,6 +207,23 @@ a:visited {
     border-bottom: 1px solid #e7ebed;
     border-top: none !important;
     vertical-align: middle !important;
+    position: relative;
+}
+
+.table td .td-action {
+    display: none;
+    position: absolute;
+    right: 1rem;
+    top: .5rem;
+    z-index: 1111;
+}
+
+.table td .td-action .svg-icon {
+    margin-right: 1rem;
+}
+
+.table td:hover .td-action {
+    display: block;
 }
 
 /*.table tr:last-child td {*/
@@ -234,9 +243,6 @@ a:visited {
     padding: 0 5px
 }
 
-.table .tr-opacity {
-    opacity: .2;
-}
 
 .table tbody tr:hover {
     background: #ECEFF1;
@@ -254,6 +260,10 @@ a:visited {
 
 .toolbar {
     margin: 1rem 0;
+}
+
+.toolbar .btn {
+    margin-right: .5rem;
 }
 
 .tab + .table {
@@ -389,6 +399,18 @@ a:visited {
     fill: #90A4AE;
 }
 
+.svg-icon-video {
+    fill: #ec6068;
+}
+
+.svg-icon-audio {
+    fill: #55617e;
+}
+
+.svg-icon-download {
+    fill: #78909C;
+}
+
 .svg-icon-image {
     fill: #8cbd61;
 }
@@ -437,4 +459,51 @@ a:visited {
     top: 55%;
     border-right-color: transparent;
     border-top-color: transparent;
+}
+
+.progress {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: #eef0f3;
+    border: 0;
+    border-radius: .1rem;
+    color: #5755d9;
+    height: .2rem;
+    position: relative;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.progress::-webkit-progress-bar {
+    background: transparent;
+    border-radius: .1rem;
+}
+
+.progress::-webkit-progress-value {
+    background: #00acac;
+    border-radius: .1rem;
+}
+
+.progress::-moz-progress-bar {
+    background: #00acac;
+    border-radius: .1rem;
+}
+
+.progress:indeterminate {
+    animation: progress-indeterminate 1.5s linear infinite;
+    background: #eef0f3 linear-gradient(to right, #00acac 30%, #eef0f3 30%) top left/150% 150% no-repeat;
+}
+
+.progress:indeterminate::-moz-progress-bar {
+    background: transparent;
+}
+
+@keyframes progress-indeterminate {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
 }

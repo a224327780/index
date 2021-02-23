@@ -33,7 +33,7 @@ def file_index(one_drive: OneDrive):
 
             items.append(item)
         page_url = data.get('@odata.nextLink')
-    except Exception as e:
+    except Exception:
         items = None
 
     if page:
@@ -43,16 +43,23 @@ def file_index(one_drive: OneDrive):
     return IndexApp.render('index', file_items=items, page_url=page_url)
 
 
-def file_detail(one_drive: OneDrive):
+def file_download(one_drive: OneDrive):
     params = dict(request.query)
+    params['file'] = params['folder']
     data = one_drive.get_file(**params)
     download_url = data.get('@microsoft.graph.downloadUrl')
     return redirect(download_url)
 
 
+def file_delete(one_drive: OneDrive):
+    params = dict(request.query)
+    params['file'] = params['folder']
+    return one_drive.delete_file(**params)
+
+
 def file_folder(one_drive: OneDrive):
     if request.method == 'GET':
-        return IndexApp.render('file/folder', layout=False)
+        return IndexApp.render('folder')
 
     params = dict(request.query)
     parent_folder = params.get('folder', '')
@@ -61,8 +68,9 @@ def file_folder(one_drive: OneDrive):
 
 
 def file_upload(one_drive: OneDrive):
+    params = dict(request.query)
     upload = request.files.get('file')
-    file = Path(upload.file.name)
-    print(file.stat().st_size)
-    print(upload.filename)
-    return 'upload'
+    # file = Path(upload.file.name)
+    # print(file.stat().st_size)
+    # print(upload.file.name)
+    return one_drive.upload_file(upload.filename, upload.file.read(), **params)

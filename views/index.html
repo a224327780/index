@@ -48,7 +48,7 @@
     <div class="right">
         <ul class="breadcrumb">
             <li class="breadcrumb-item">
-                <a href="/">Index</a>
+                <a href="/">OneIndex</a>
             </li>
             <li class="breadcrumb-item">
                 <a href="/{{name}}">{{name}}</a>
@@ -58,10 +58,12 @@
             <div class="main-content">
                 <div class="columns toolbar">
                     <div class="column col-3">
-                        <a data-href="{{!request.url.replace('index', 'upload')}}" class="btn btn-dark btn-lg ajax-modal">上传文件</a>
-                        <a data-href="{{!request.url.replace('index', 'folder')}}" class="btn btn-danger btn-lg ajax-modal">新建文件夹</a>
+                        <input type="file" id="btn_file" style="display:none">
+                        <a data-href="{{!request.url}}?a=upload" class="btn btn-dark btn-lg upload-btn">上传文件</a>
+                        <a data-href="{{!request.url}}?a=folder" class="btn btn-danger btn-lg ajax-modal">新建文件夹</a>
                     </div>
                 </div>
+                <progress class="progress d-none" value="0" max="100"></progress>
                 % if type(file_items) == list:
                 <table class="table" data-page="{{page_url}}">
                     <thead>

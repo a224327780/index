@@ -57,7 +57,7 @@ class OneDrive:
 
     def upload_file(self, file_name, file_data, **kwargs):
         drive = _get_drive(**kwargs)
-        return self.api(f'{drive}:/{file_name}:/content', method='PUT', data=file_data, timeout=120)
+        return self.api(f'{drive}:/{file_name}:/content', method='PUT', data=file_data, timeout=300)
 
     def file_list(self, folder: str = None, **kwargs):
         dest = '/children'
@@ -75,9 +75,9 @@ class OneDrive:
         drive = _get_drive(**kwargs)
         return self.api(f'{drive}:/{file}', method='DELETE', timeout=10)
 
-    def get_file(self, file_id: str, **kwargs):
+    def get_file(self, file: str, **kwargs):
         drive = _get_drive(**kwargs)
-        return self.api(f'{drive}:/{file_id}')
+        return self.api(f'{drive}:/{file}')
 
     def create_folder(self, parent_folder: str, folder_name: str, **kwargs):
         drive = _get_drive(**kwargs)

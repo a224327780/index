@@ -15,6 +15,29 @@ App.tip = function (message, time) {
 };
 
 $(function () {
+    $(document).on('click', '.ajax', function () {
+        let $this = $(this);
+        let tr = $this.parents('tr')
+        console.log(111);
+        $.ajax({
+            type: 'GET',
+            url: $this.data('href'),
+            dataType: 'json',
+            context: $this,
+            beforeSend: function () {
+                tr.fadeOut()
+            },
+            error: function (jqXHR, statusText, error) {
+                let data = JSON.parse(jqXHR.responseText)
+                App.tip(data['msg'], 5000);
+                tr.fadeIn()
+            },
+            success: function (result) {
+                tr.remove();
+            }
+        });
+    });
+
     $(document).on('click', '.submit', function () {
         let $this = $(this);
         let $form = $this.parents('form')
@@ -36,6 +59,38 @@ $(function () {
                 window.location.reload();
             }
         });
+    });
+
+    $(document).on('click', '.upload-btn', function () {
+        let $file = $('#btn_file');
+        $file.click();
+    });
+
+    $(document).on('change', '#btn_file', function () {
+        if (this.files.length <= 0) {
+            return false;
+        }
+        let formData = new FormData();
+        let file = this.files[0];
+        formData.append('file', file);
+        console.log(file)
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", $('.upload-btn').data('href'));
+        let progress = $('.progress');
+        progress.removeClass('d-none')
+        xhr.upload.addEventListener('progress', function (e) {
+            let percent = (e.loaded / e.total) * 100;
+            console.log(e.loaded + '/' + e.total)
+            progress.attr('value', percent)
+        }, false);
+        xhr.addEventListener('load', function (e) {
+            App.tip('upload done.');
+            progress.addClass('d-none');
+            // window.location.reload();
+            console.log(e);
+        }, false);
+        xhr.send(formData);
     });
 
     $(document).on('click', '.ajax-modal', function () {

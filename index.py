@@ -40,13 +40,22 @@ def install(action=None, name=None):
     return run_route('install', action)
 
 
-@app.route('/:name', method='GET')
-@app.route('/:name/<path:path>')
+@app.route('/:name', method=['GET', 'POST'])
+@app.route('/:name/<path:path>', method=['GET', 'POST'])
 def file(name, path=None):
     request.query['name'] = name
+    action = 'index'
+
+    a = request.query.get('a')
+    if a:
+        action = a
+
     if path:
         request.query['folder'] = path
-    return run_route('file', 'index')
+
+        if '.' in path and not a:
+            action = 'download'
+    return run_route('file', action)
 
 
 @app.error(404)
