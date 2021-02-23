@@ -1,5 +1,5 @@
 bottle
 pymongo
-dnspython
+pymongo[srv]
 python-dotenv
 requests

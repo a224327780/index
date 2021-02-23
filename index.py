@@ -18,11 +18,6 @@ except Exception as e:
 app = default_app()
 
 
-@app.route('/favicon.ico')
-def favicon():
-    return static_file('favicon.png', root='static')
-
-
 @app.route('/static/<filename:path>')
 def send_static(filename):
     return static_file(filename, root='static')

@@ -1,3 +1,4 @@
+import base64
 from datetime import datetime
 from pathlib import Path
 
@@ -13,22 +14,27 @@ def file_index(one_drive: OneDrive):
     page = params.get('page')
     name = params.get('name')
 
-    if page:
-        data = one_drive.api(page)
-    else:
-        data = one_drive.file_list(**params)
+    page_url = None
+    try:
+        if page:
+            page = base64.b64decode(page).decode('ascii')
+            data = one_drive.api(page)
+        else:
+            data = one_drive.file_list(**params)
 
-    items = []
-    for item in data['value']:
-        item['lastModifiedDateTime'] = datetime.strptime(item['lastModifiedDateTime'], '%Y-%m-%dT%H:%M:%SZ')
-        item['size'] = format_size(item['size'])
-        _folder = f"{folder.strip('/')}/{item.get('name')}"
-        item['url'] = f"/{name}/{_folder.strip('/')}"
-        if item.get('folder'):
-            item['size'] = item.get('folder').get('childCount')
+        items = []
+        for item in data['value']:
+            item['lastModifiedDateTime'] = datetime.strptime(item['lastModifiedDateTime'], '%Y-%m-%dT%H:%M:%SZ')
+            item['size'] = format_size(item['size'])
+            _folder = f"{folder.strip('/')}/{item.get('name')}"
+            item['url'] = f"/{name}/{_folder.strip('/')}"
+            if item.get('folder'):
+                item['size'] = item.get('folder').get('childCount')
 
-        items.append(item)
-    page_url = data.get('@odata.nextLink')
+            items.append(item)
+        page_url = data.get('@odata.nextLink')
+    except Exception as e:
+        items = None
 
     if page:
         html = IndexApp.render('data', file_items=items)

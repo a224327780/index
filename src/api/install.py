@@ -12,7 +12,8 @@ def install_index(one_drive: OneDrive):
             data = IndexApp.get_mongo().find_one({'_id': name})
         return template('install.html', data=data)
 
-    params = dict(request.forms)
+    params = dict(request.forms.decode())
+
     _id = params.get('id')
 
     IndexApp.install(params)

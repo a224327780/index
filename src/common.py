@@ -1,6 +1,7 @@
 import json
 import math
 import os
+import re
 import time
 from datetime import datetime, timezone, timedelta
 from importlib import import_module
@@ -110,9 +111,13 @@ class IndexApp:
         name = request.query.get('name')
         kwargs.setdefault('name', name)
         kwargs.setdefault('request', request)
+        kwargs.setdefault('static_version', os.environ.get('STATIC_VERSION', 0.1))
         drives = cls.get_drives()
         kwargs.setdefault('drives', drives)
-        return template(f'{tpl_name}.html', **kwargs)
+        html = template(f'{tpl_name}.html', **kwargs)
+        html = re.sub(r'(\r?\n)', '', html)
+        html = re.sub(r'>\s{2,}<', '><', html)
+        return html.strip()
 
     @classmethod
     def before_request(cls, one_drive: OneDrive):
