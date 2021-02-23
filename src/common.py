@@ -96,7 +96,9 @@ class IndexApp:
 
     @classmethod
     def install(cls, params: dict):
-        return cls.get_mongo().update_one({'_id': params.get('name')}, {'$set': params}, True)
+        _id = params.get('id')
+        del params['id']
+        return cls.get_mongo().update_one({'_id': _id}, {'$set': params}, True)
 
     @classmethod
     def get_drive(cls, _id):

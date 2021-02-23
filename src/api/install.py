@@ -13,12 +13,11 @@ def install_index(one_drive: OneDrive):
         return template('install.html', data=data)
 
     params = dict(request.forms)
-    params['_id'] = params['id']
-    del params['id']
+    _id = params.get('id')
 
     IndexApp.install(params)
 
-    params['state'] = f"{request.url}/auth/{params.get('name')}"
+    params['state'] = f"{request.url}/auth/{_id}"
     url = one_drive.authorize_url(**params)
     redirect(url)
 
