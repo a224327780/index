@@ -29,7 +29,7 @@ class OneDrive:
         self._redirect_uri = 'https://oneindex.atcaoyufei.workers.dev'
         self.scope = 'offline_access User.Read Sites.ReadWrite.All'
         self.logger = logging.getLogger(self.__class__.__name__)
-        self.file_fields = 'id, name, size, folder, audio, video, photo, image, lastModifiedDateTime'
+        self.file_fields = 'id, name, size, folder, audio, video, photo, image, lastModifiedDateTime, @microsoft.graph.downloadUrl'
         self.default_client_id = ''
         self.default_client_secret = ''
 
