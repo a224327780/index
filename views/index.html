@@ -82,9 +82,9 @@
                 </div>
                 <progress class="progress d-none" value="0" max="100"></progress>
                 % if type(items) == list:
-                % m = request.get('m')
+                % m = request.query.get('m')
                 % if not m or m == 'list':
-                <table class="table" data-page="{{page_url}}">
+                <table class="table" data-page="{{page_url}}" data-view="{{m}}">
                     <thead>
                     <tr>
                         <th>文件名</th>
@@ -93,7 +93,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    % include('data_image.html', items=items)
+                    % include('data.html', items=items)
                     </tbody>
                 </table>
                 % else:
