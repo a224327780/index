@@ -80,7 +80,7 @@ class IndexApp:
         return groups
 
     @classmethod
-    def save_token(cls, name: str, data: dict):
+    def save_token(cls, name: str, data: dict, data2=None):
         mongodb = cls.get_mongo()
         params = {
             'access_token': data.get('access_token'),
@@ -94,6 +94,9 @@ class IndexApp:
         username = data.get('username')
         if username:
             params['username'] = username
+
+        if data2:
+            params.update(data2)
         return mongodb.update_one({'_id': name}, {'$set': params}).modified_count
 
     @classmethod
@@ -112,12 +115,14 @@ class IndexApp:
         name = request.query.get('name')
         kwargs.setdefault('name', name)
         kwargs.setdefault('request', request)
+        kwargs.setdefault('drive', cls.drive_data)
         kwargs.setdefault('static_version', os.environ.get('STATIC_VERSION', 0.1))
         drives = cls.get_drives()
         kwargs.setdefault('drives', drives)
         html = template(f'{tpl_name}.html', **kwargs)
-        html = re.sub(r'(\r?\n)', '', html)
-        html = re.sub(r'>\s{2,}<', '><', html)
+        if not request.is_ajax:
+            html = re.sub(r'(\r?\n)', '', html)
+            html = re.sub(r'>\s{2,}<', '><', html)
         return html.strip()
 
     @classmethod
@@ -143,7 +148,15 @@ class IndexApp:
             if not access_token:
                 abort(text=f"[{_id}]: refresh token fail.")
 
-            cls.save_token(_id, _data)
+            one_drive.access_token = access_token
+
+            if data.get('drive_type') == 'OneDrive':
+                drive_data = one_drive.get_drive()
+            else:
+                drive_data = one_drive.get_site_drive(data['site_id'])
+
+            cls.save_token(_id, _data, {'drive_id': drive_data['id'], 'total': drive_data['quota']['total'],
+                                        'remaining': drive_data['quota']['remaining']})
             data['access_token'] = access_token
 
         one_drive.access_token = data['access_token']

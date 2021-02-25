@@ -94,8 +94,11 @@ class OneDrive:
             dest = ':/{}:/children'.format(parent_folder.strip('/'))
         return self.api(f'{drive}{dest}', json=json_data)
 
-    def active_drive(self, user_id, **kwargs):
-        return self.api(f'/users/{user_id}/drive')
+    def get_drive(self, **kwargs):
+        return self.api(f'/me/drive')
+
+    def get_site_drive(self, site_id, **kwargs):
+        return self.api(f'/sites/{site_id}/drive')
 
     def authorize_url(self, **kwargs):
         params = self._default_params(**kwargs)

@@ -1,6 +1,5 @@
 import base64
 from datetime import datetime
-from pathlib import Path
 
 from bottle import request, redirect
 
@@ -14,7 +13,7 @@ def file_index(one_drive: OneDrive):
     page = params.get('page')
     name = params.get('name')
 
-    page_url = None
+    page_url = ''
     try:
         if page:
             page = base64.b64decode(page).decode('ascii')
@@ -32,15 +31,15 @@ def file_index(one_drive: OneDrive):
                 item['size'] = item.get('folder').get('childCount')
 
             items.append(item)
-        page_url = data.get('@odata.nextLink')
+        page_url = data.get('@odata.nextLink', '')
     except Exception:
         items = None
 
     if page:
-        html = IndexApp.render('data', file_items=items)
+        html = IndexApp.render('data', items=items)
         return {'html': html, 'page_url': page_url}
 
-    return IndexApp.render('index', file_items=items, page_url=page_url)
+    return IndexApp.render('index', items=items, page_url=page_url)
 
 
 def file_download(one_drive: OneDrive):
@@ -74,3 +73,7 @@ def file_upload(one_drive: OneDrive):
     # print(file.stat().st_size)
     # print(upload.file.name)
     return one_drive.upload_file(upload.filename, upload.file.read(), **params)
+
+
+def file_rclone(one_drive: OneDrive):
+    return IndexApp.render('rclone')

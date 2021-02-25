@@ -1,0 +1,27 @@
+<div class="modal modal-md active" id="folder-add">
+    <a href="javascript:void(0);" class="modal-overlay btn-clear" aria-label="Close"></a>
+    <div class="modal-container">
+        <div class="modal-header">
+            <a href="javascript:void(0);" class="btn btn-clear float-right" aria-label="Close"></a>
+            <div class="modal-title h5">Rclone配置文件</div>
+        </div>
+        <div class="modal-body">
+            <div class="content">
+                <div class="form-group">
+                    % import time
+                    % timeArray = time.strptime(drive['update_date'], "%Y-%m-%d %H:%M:%S")
+                    % expiry = time.strftime("%Y-%m-%dT%H:%M:%S.122575099Z", timeArray)
+                    <textarea rows="15" style="width: 100%;">
+[{{drive['_id']}}]
+type = onedrive
+client_id = {{drive['client_id']}}
+client_secret = {{drive['client_id']}}
+token = {"access_token":"{{drive['access_token']}}","token_type":"Bearer","refresh_token":"{{drive['refresh_token']}}","expiry":"{{expiry}}"}
+drive_id = {{drive['drive_id']}}
+drive_type = business
+                    </textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
