@@ -46,7 +46,7 @@ def install_auth(one_drive: OneDrive):
     if data.get('drive_type') == 'OneDrive':
         drive_data = one_drive.get_drive()
     else:
-        drive_data = one_drive.get_site_drive(data['site_id'])
+        drive_data = one_drive.get_site_drive(one_data['site_id'])
 
     IndexApp.save_token(name, one_data, {'username': user_info['userPrincipalName'], 'drive_id': drive_data['id'],
                                          'total': drive_data['quota']['total'],

@@ -65,4 +65,4 @@ def error404(e1):
 
 
 if __name__ == '__main__':
-    app.run(host='localhost', port=8080, debug=os.environ.get('DEBUG', True))
+    app.run(host='localhost', port=8080, debug=True)
