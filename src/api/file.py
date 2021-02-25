@@ -1,4 +1,5 @@
 import base64
+import json
 from datetime import datetime
 
 from bottle import request, redirect
@@ -13,28 +14,24 @@ def file_index(one_drive: OneDrive):
     page = params.get('page')
     name = params.get('name')
 
-    page_url = ''
-    try:
-        if page:
-            page = base64.b64decode(page).decode('ascii')
-            data = one_drive.api(page)
-        else:
-            data = one_drive.file_list(**params)
+    if page:
+        page = base64.b64decode(page).decode('ascii')
+        data = one_drive.api(page)
+    else:
+        data = one_drive.file_list(**params)
+    # print(json.dumps(data, indent=4))
+    items = []
+    for item in data['value']:
+        item['lastModifiedDateTime'] = str(datetime.strptime(item['lastModifiedDateTime'], '%Y-%m-%dT%H:%M:%SZ'))
+        item['size'] = format_size(item['size'])
+        _folder = f"{folder.strip('/')}/{item.get('name')}"
+        item['url'] = f"/{name}/{_folder.strip('/')}"
+        if item.get('folder'):
+            item['size'] = item.get('folder').get('childCount')
 
-        items = []
-        for item in data['value']:
-            item['lastModifiedDateTime'] = datetime.strptime(item['lastModifiedDateTime'], '%Y-%m-%dT%H:%M:%SZ')
-            item['size'] = format_size(item['size'])
-            _folder = f"{folder.strip('/')}/{item.get('name')}"
-            item['url'] = f"/{name}/{_folder.strip('/')}"
-            if item.get('folder'):
-                item['size'] = item.get('folder').get('childCount')
+        items.append(item)
 
-            items.append(item)
-        page_url = data.get('@odata.nextLink', '')
-    except Exception:
-        items = None
-
+    page_url = data.get('@odata.nextLink', '')
     if page:
         html = IndexApp.render('data', items=items)
         return {'html': html, 'page_url': page_url}

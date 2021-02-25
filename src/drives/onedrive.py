@@ -70,7 +70,7 @@ class OneDrive:
         drive = _get_drive(**kwargs)
         fields = kwargs.get('fields') or self.file_fields
 
-        params = {'select': fields, '$top': kwargs.get('limit') or 25}
+        params = {'select': fields, '$top': kwargs.get('limit') or 25, '$expand': 'thumbnails($select=large)'}
         # '$expand': 'thumbnails($select=large)'
         return self.api(f'{drive}{dest}', params)
 
