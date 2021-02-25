@@ -91,9 +91,6 @@ class IndexApp:
         site_id = data.get('site_id')
         if site_id:
             params['site_id'] = site_id
-        username = data.get('username')
-        if username:
-            params['username'] = username
 
         if data2:
             params.update(data2)
