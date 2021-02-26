@@ -1,6 +1,6 @@
 % for item in items:
 <tr>
-    <td class="text-left">
+    <td class="text-left" id="{{item['@microsoft.graph.downloadUrl']}}">
         % if item.get('folder'):
         <svg viewBox="0 0 48 48" class="svg-icon">
             <path class="svg-folder-icon-bg" d="M40 12H22l-4-4H8c-2.2 0-4 1.8-4 4v8h40v-4c0-2.2-1.8-4-4-4z"></path>
@@ -9,32 +9,18 @@
         </svg>
         <a href="{{item['url']}}">{{item['name']}}</a>
         % else:
-        % file_ext = item['name'].split('.')[-1].lower()
-        % if file_ext in ['jpg', 'png', 'bmp', 'gif', 'webp', 'jpeg', 'svg']:
-        <svg viewBox="0 0 24 24" class="svg-icon svg-icon-image">
-            <path d="M8.5,13.5L11,16.5L14.5,12L19,18H5M21,19V5C21,3.89 20.1,3 19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19Z"></path>
-        </svg>
-        % elif file_ext in ['mp4', 'flv', 'mkv', 'rmvb', 'wmv', 'avi']:
-        <svg viewBox="0 0 24 24" class="svg-icon svg-icon-video">
-            <path d="M17,10.5V7A1,1 0 0,0 16,6H4A1,1 0 0,0 3,7V17A1,1 0 0,0 4,18H16A1,1 0 0,0 17,17V13.5L21,17.5V6.5L17,10.5Z"></path>
-        </svg>
-        % elif file_ext in ['mp3', 'aac', 'flac']:
-        <svg viewBox="0 0 24 24" class="svg-icon svg-icon-audio">
-            <path d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z"></path>
-        </svg>
-        % else:
-        <svg viewBox="0 0 24 24" class="svg-icon svg-icon-text">
-            <path d="M14,17H7V15H14M17,13H7V11H17M17,9H7V7H17M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3Z"></path>
-        </svg>
-        % end
-        {{item['name']}}
+        <span title="{{item['name']}}" class="file-item {{item['meta']['type']}}"><svg viewBox="0 0 24 24" class="svg-icon svg-icon-{{item['meta']['type']}}">
+            <path d="{{item['meta']['svg']}}"></path>
+        </svg>{{item['name']}}</span>
+        <div class="">
+        </div>
         <div class="td-action">
             <a href="{{item['@microsoft.graph.downloadUrl']}}">
                 <svg viewBox="0 0 24 24" class="svg-icon svg-icon-download">
                     <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"></path>
                 </svg>
             </a>
-            <a data-href="{{item['url']}}?a=delete" class="ajax">
+            <a data-href="{{!url_join(item['url'], {'a': 'delete'})}}" class="ajax">
                 <svg viewBox="0 0 24 24" class="svg-icon svg-icon-video">
                     <path d="M 4.9902344 3.9902344 A 1.0001 1.0001 0 0 0 4.2929688 5.7070312 L 10.585938 12 L 4.2929688 18.292969 A 1.0001 1.0001 0 1 0 5.7070312 19.707031 L 12 13.414062 L 18.292969 19.707031 A 1.0001 1.0001 0 1 0 19.707031 18.292969 L 13.414062 12 L 19.707031 5.7070312 A 1.0001 1.0001 0 0 0 18.980469 3.9902344 A 1.0001 1.0001 0 0 0 18.292969 4.2929688 L 12 10.585938 L 5.7070312 4.2929688 A 1.0001 1.0001 0 0 0 4.9902344 3.9902344 z"/>
                 </svg>

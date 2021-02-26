@@ -14,6 +14,41 @@ App.tip = function (message, time) {
     }, time);
 };
 
+App.modal = function ($this, html, size) {
+    let modal_size = size || $this.data('modal-size') || 'sm'
+    let url = $this.data('href') || $this.attr('href');
+    let title = $this.attr('title');
+    let $modal = $('.modal');
+    $modal.attr('class', 'active modal modal-' + modal_size)
+
+    let $body = $modal.find('.modal-body')
+    $body.html("<div class=\"loading loading-lg\"></div>")
+
+    $modal.find('.modal-title').html(title)
+    $(document).on('click', '.modal .btn-clear', function () {
+        $modal.removeClass('active');
+        $body.html('')
+    })
+    if (html) {
+        $body.html(html)
+        return
+    }
+    $.ajax({
+        type: 'GET',
+        url: url,
+        context: $this,
+        beforeSend: function () {
+            $modal.addClass('active');
+        },
+        error: function (jqXHR, statusText, error) {
+            $body.html(jqXHR.responseText)
+        },
+        success: function (result) {
+            $body.html(result)
+        }
+    });
+}
+
 $(function () {
     $(document).on('click', '.ajax', function () {
         let $this = $(this);
@@ -100,24 +135,22 @@ $(function () {
 
     $(document).on('click', '.ajax-modal', function () {
         let $this = $(this);
-        let url = $this.data('href') || $this.attr('href');
-        $.get(url, function (html) {
-            let $container = $("body").find('.modal-container')
-            if (!$container.length) {
-                $('body').append(html)
-            } else {
-                $container.html($(html).find('.modal-container').html())
-            }
-            let $modal = $('.modal');
-            $modal.addClass('active');
-            $container = $modal.find('.modal-container')
-            $container.find('.btn-clear').on('click', function () {
-                $modal.removeClass('active');
-                $container.html('')
-            });
-        });
+        App.modal($this)
         return false;
     });
+
+    $(document).on('click', '.file-item.video', function () {
+        let $this = $(this);
+        let $parent = $this.parents('td')
+        App.modal($this, "<div id=\"dplayer\"></div>", 'lg')
+        const dp = new DPlayer({
+            container: document.getElementById('dplayer'),
+            video: {
+                url: $parent.attr('id'),
+            },
+            autoplay: false
+        });
+    })
 
     window.load_url = {};
     $(window).scroll(function () {

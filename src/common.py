@@ -57,6 +57,24 @@ def format_size(size_bytes):
     return f'{round(size_bytes / p, 2)}{size_name[i]}'
 
 
+def format_file_type(name):
+    file_ext = name.split('.')[-1].lower()
+    svg_type = {
+        'image': 'M8.5,13.5L11,16.5L14.5,12L19,18H5M21,19V5C21,3.89 20.1,3 19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19Z',
+        'video': 'M17,10.5V7A1,1 0 0,0 16,6H4A1,1 0 0,0 3,7V17A1,1 0 0,0 4,18H16A1,1 0 0,0 17,17V13.5L21,17.5V6.5L17,10.5Z',
+        'audio': 'M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z',
+        'file': 'M14,17H7V15H14M17,13H7V11H17M17,9H7V7H17M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3Z'
+    }
+    _type = 'file'
+    if file_ext in ['jpg', 'png', 'bmp', 'gif', 'webp', 'jpeg', 'svg']:
+        _type = 'image'
+    elif file_ext in ['mp4', 'flv', 'mkv', 'rmvb', 'wmv', 'avi']:
+        _type = 'video'
+    elif file_ext in ['mp3', 'aac', 'flac']:
+        _type = 'audio'
+    return {'type': _type, 'svg': svg_type[_type]}
+
+
 def get_time():
     utc_dt = datetime.utcnow().replace(tzinfo=timezone.utc)
     return utc_dt.astimezone(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S')

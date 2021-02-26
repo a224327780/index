@@ -213,13 +213,14 @@ a:visited {
     cursor: pointer;
 }
 
-.image-items .column {
+.grid-items .column {
     margin-bottom: .8rem;
 }
 
-.image-items img {
+.grid-items img {
     width: 320px;
-    height: 320px;
+    /*height: 320px;*/
+    /*max-width: 100%;*/
     object-fit: cover;
 }
 
@@ -290,10 +291,6 @@ a:visited {
     padding: 1rem 0 2rem 0;
 }
 
-/*.toolbar .column .btn:not(:last-child) {*/
-/*    margin-right: .5rem;*/
-/*}*/
-
 .tab + .table {
     margin-top: 1rem;
 }
@@ -335,8 +332,22 @@ a:visited {
 
 .btn:hover, .btn:focus {
     color: #fff;
-    background: #2897a7;
-    border-color: #2897a7;
+    background: inherit;
+    border-color: inherit;
+    opacity: .8;
+}
+
+.btn.btn-primary {
+    color: #fff;
+    background: #1E9FFF;
+    border-color: #1E9FFF;
+}
+
+.btn.btn-primary:focus, .btn.btn-primary:hover {
+    background: #1E9FFF;
+    border-color: #1E9FFF;
+    color: #fff;
+    opacity: .8;
 }
 
 .btn.btn-dark {
@@ -375,13 +386,23 @@ a:visited {
     max-width: 640px;
 }
 
+.modal.modal-lg .modal-container {
+    max-width: 80%;
+}
+
 .modal-container {
     border-radius: .3rem;
     padding: 0 !important;
+    max-height: 100%;
 }
 
 .modal-container .modal-body {
     padding: 1.5rem;
+}
+
+.modal.modal-lg .modal-container .modal-body {
+    padding: 0;
+    text-align: center;
 }
 
 .modal-container .modal-header {
@@ -427,7 +448,7 @@ a:visited {
     fill: #FFCA28;
 }
 
-.svg-icon-text {
+.svg-icon-file {
     fill: #90A4AE;
 }
 

@@ -1,4 +1,5 @@
 % from src.common import format_size, url_join
+% m = request.query.get('m')
 <!DOCTYPE HTML>
 <html lang="zh-CN">
 <head>
@@ -7,10 +8,11 @@
 <meta name="renderer" content="webkit">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.9/dist/spectre.min.css">
-<link rel="stylesheet" href="/static/main.css?v=1">
+<link rel="stylesheet" href="/static/main.css?v=2">
 <link rel="shortcut icon" href=https://cdn.jsdelivr.net/gh/a224327780/oneadmin@{{static_version}}/static/favicon.png>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@1.11.0/dist/jquery.min.js"></script>
 <script type="text/javascript" src="/static/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dplayer@1.26.0/dist/DPlayer.min.js"></script>
 <title>OneIndex</title>
 <style>
     @font-face {
@@ -53,7 +55,6 @@
                 <a href="/{{name}}">{{name}}</a>
             </section>
             <section class="navbar-center">
-                % m = request.query.get('m')
                 <a href="{{!url_join(request.url, {'m': 'grid'})}}" class="{{'d-none' if m == 'grid' else ''}}">
                     <svg viewBox="0 0 24 24" class="svg-icon">
                         <path d="M3,9H7V5H3V9M3,14H7V10H3V14M8,14H12V10H8V14M13,14H17V10H13V14M8,9H12V5H8V9M13,5V9H17V5H13M18,14H22V10H18V14M3,19H7V15H3V19M8,19H12V15H8V19M13,19H17V15H13V19M18,19H22V15H18V19M18,5V9H22V5H18Z"></path>
@@ -76,8 +77,8 @@
                         <div class="btn-group">
                             <input type="file" id="btn_file" style="display:none">
                             <a data-href="{{!url_join(request.url, {'a': 'upload'})}}" class="btn btn-dark btn-lg upload-btn">上传文件</a>
-                            <a data-href="{{!url_join(request.url, {'a': 'folder'})}}" class="btn btn-danger btn-lg ajax-modal">新建文件夹</a>
-                            <a data-href="{{!url_join(request.url, {'a': 'rclone'})}}" class="btn btn-dark btn-lg ajax-modal">rclone</a>
+                            <a title="创建文件夹" data-href="{{!url_join(request.url, {'a': 'folder'})}}" class="btn btn-danger btn-lg ajax-modal">新建文件夹</a>
+                            <a data-modal-size="md" title="Rclone配置文件" data-href="{{!url_join(request.url, {'a': 'rclone'})}}" class="btn btn-primary btn-lg ajax-modal">rclone</a>
                         </div>
                     </div>
                 </div>
@@ -97,8 +98,8 @@
                     </tbody>
                 </table>
                 % else:
-                <div class="columns image-items">
-                    % include('data/image.html', items=items)
+                <div class="columns grid-items">
+                    % include('data/grid.html', items=items)
                 </div>
                 % end
                 % else:
@@ -110,7 +111,20 @@
         </div>
     </div>
 </div>
+<div class="modal" id="modal">
+    <a href="javascript:void(0);" class="modal-overlay btn-clear" aria-label="Close"></a>
+    <div class="modal-container">
+        <div class="modal-header">
+            <a href="javascript:void(0);" class="btn btn-clear float-right" aria-label="Close"></a>
+            <div class="modal-title h5"></div>
+        </div>
+        <div class="modal-body">
+            <div class="loading loading-lg"></div>
+            <div class="modal-content"></div>
+        </div>
+    </div>
+</div>
 % import json
-<script>console.log({{!json.dumps(items)}})</script>
+<script>console.log({{!json.dumps(items)}});</script>
 </body>
 </html>

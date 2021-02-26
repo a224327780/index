@@ -3,7 +3,7 @@ from datetime import datetime
 
 from bottle import request, redirect
 
-from src.common import format_size, IndexApp
+from src.common import format_size, IndexApp, format_file_type
 from src.drives.onedrive import OneDrive
 
 
@@ -23,6 +23,7 @@ def file_index(one_drive: OneDrive):
     for item in data['value']:
         item['lastModifiedDateTime'] = str(datetime.strptime(item['lastModifiedDateTime'], '%Y-%m-%dT%H:%M:%SZ'))
         item['size'] = format_size(item['size'])
+        item['meta'] = format_file_type(item['name'])
         _folder = f"{folder.strip('/')}/{item.get('name')}"
         item['url'] = f"/{name}/{_folder.strip('/')}"
         if item.get('folder'):
