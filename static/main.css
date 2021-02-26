@@ -351,6 +351,13 @@ a:visited {
     opacity: .8;
 }
 
+.btn.btn-clear:hover, .btn.btn-clear:focus {
+    background: unset;
+    border-color: unset;
+    color: #ff3366;
+    opacity: 1;
+}
+
 .btn.btn-primary {
     color: #fff;
     background: #00acac;

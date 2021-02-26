@@ -183,6 +183,7 @@ class IndexApp:
                 drive_data = one_drive.get_site_drive(data['site_id'])
 
             cls.save_token(_id, _data, {'drive_id': drive_data['id'], 'total': drive_data['quota']['total'],
+                                        'used': drive_data['quota']['used'],
                                         'remaining': drive_data['quota']['remaining']})
             data['access_token'] = access_token
 

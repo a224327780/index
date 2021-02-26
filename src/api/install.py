@@ -50,6 +50,7 @@ def install_auth(one_drive: OneDrive):
 
     IndexApp.save_token(name, one_data, {'username': user_info['userPrincipalName'], 'drive_id': drive_data['id'],
                                          'total': drive_data['quota']['total'],
+                                         'used': drive_data['quota']['used'],
                                          'remaining': drive_data['quota']['remaining']})
     if data['drive_type'] == 'SharePoint' and not one_data.get('site_id'):
         return f'Site: <b>{data["site_id"]}</b> Not Found'
