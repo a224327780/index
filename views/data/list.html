@@ -1,6 +1,6 @@
 % for item in items:
 <tr>
-    <td class="text-left" id="{{item['@microsoft.graph.downloadUrl']}}">
+    <td class="text-left" id="{{item.get('@microsoft.graph.downloadUrl')}}">
         % if item.get('folder'):
         <svg viewBox="0 0 48 48" class="svg-icon">
             <path class="svg-folder-icon-bg" d="M40 12H22l-4-4H8c-2.2 0-4 1.8-4 4v8h40v-4c0-2.2-1.8-4-4-4z"></path>

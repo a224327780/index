@@ -239,6 +239,10 @@ a:visited {
     position: relative;
 }
 
+.table td .file-item .svg-icon {
+    margin-right: .5rem;
+}
+
 .table td .td-action {
     display: none;
     position: absolute;
