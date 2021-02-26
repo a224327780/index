@@ -31,8 +31,10 @@ def file_index(one_drive: OneDrive):
         items.append(item)
 
     page_url = data.get('@odata.nextLink', '')
+    m = params.get('m')
     if page:
-        html = IndexApp.render('data', items=items)
+        view_name = 'image' if m == 'grid' else 'list'
+        html = IndexApp.render(f'data/{view_name}', items=items)
         return {'html': html, 'page_url': page_url}
 
     return IndexApp.render('index', items=items, page_url=page_url)

@@ -217,6 +217,12 @@ a:visited {
     margin-bottom: .8rem;
 }
 
+.image-items img {
+    width: 320px;
+    height: 320px;
+    object-fit: cover;
+}
+
 .table th {
     background: #ecf0f2;
     border-right: 1px solid #fcfcfc;

@@ -11,11 +11,9 @@ def _get_drive(**kwargs):
         return f'/sites/{site_id}/drive/root'
 
     user_id = kwargs.get('user_id')
-    if user_id == 'me':
-        drive = f'/me/drive/root'
-    else:
-        drive = f'/users/{user_id}/drive/root'
-    return drive
+    if not user_id or user_id == 'me':
+        return f'/me/drive/root'
+    return f'/users/{user_id}/drive/root'
 
 
 class OneDrive:
@@ -70,7 +68,12 @@ class OneDrive:
         drive = _get_drive(**kwargs)
         fields = kwargs.get('fields') or self.file_fields
 
-        params = {'select': fields, '$top': kwargs.get('limit') or 25, '$expand': 'thumbnails($select=large)'}
+        params = {
+            'select': fields,
+            '$top': kwargs.get('limit') or 20,
+            '$expand': 'thumbnails($select=large)',
+            '$orderby': 'name desc'
+        }
         # '$expand': 'thumbnails($select=large)'
         return self.api(f'{drive}{dest}', params)
 
@@ -81,6 +84,11 @@ class OneDrive:
     def get_file(self, file: str, **kwargs):
         drive = _get_drive(**kwargs)
         return self.api(f'{drive}:/{file}')
+
+    def rename_file(self, file: str, new_file: str, **kwargs):
+        drive = _get_drive(**kwargs)
+        json_data = {'name': new_file}
+        return self.api(f'{drive}:/{file}', json=json_data, method='PATCH')
 
     def create_folder(self, parent_folder: str, folder_name: str, **kwargs):
         drive = _get_drive(**kwargs)

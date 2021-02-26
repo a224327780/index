@@ -9,8 +9,8 @@
             <div class="content">
                 <div class="form-group">
                     % import time
-                    % timeArray = time.strptime(drive['update_date'], "%Y-%m-%d %H:%M:%S")
-                    % expiry = time.strftime("%Y-%m-%dT%H:%M:%S.122575099Z", timeArray)
+                    % time_local = time.localtime(drive['expires_time'])
+                    % expiry = time.strftime("%Y-%m-%dT%H:%M:%S.122575099Z", time_local)
                     <textarea rows="15" style="width: 100%;">
 [{{drive['_id']}}]
 type = onedrive

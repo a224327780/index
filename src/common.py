@@ -5,11 +5,23 @@ import re
 import time
 from datetime import datetime, timezone, timedelta
 from importlib import import_module
+import urllib.parse as urlparse
+from urllib.parse import urlencode
 
 from bottle import request, template, redirect, abort
 from pymongo import MongoClient
 
 from src.drives.onedrive import OneDrive
+
+
+def url_join(url, params=None):
+    if not params:
+        return url
+    url_parts = list(urlparse.urlparse(url))
+    query = dict(urlparse.parse_qsl(url_parts[4]))
+    query.update(params)
+    url_parts[4] = urlencode(query)
+    return urlparse.urlunparse(url_parts)
 
 
 def run_route(controller, action=None):
