@@ -143,13 +143,24 @@ $(function () {
         let $this = $(this);
         let $parent = $this.parents('td')
         App.modal($this, "<div id=\"dplayer\"></div>", 'lg')
-        const dp = new DPlayer({
-            container: document.getElementById('dplayer'),
-            video: {
-                url: $parent.attr('id'),
-            },
-            autoplay: false
-        });
+
+        function paly() {
+            return new DPlayer({
+                container: document.getElementById('dplayer'),
+                video: {
+                    url: $parent.attr('id'),
+                },
+                autoplay: true
+            });
+        }
+
+        if (typeof (DPlayer) === "undefined") {
+            jQuery.getScript('https://cdn.jsdelivr.net/npm/dplayer@1.26.0/dist/DPlayer.min.js', function (data, status, jqxhr) {
+                paly();
+            });
+        } else {
+            paly();
+        }
     })
 
     window.load_url = {};
@@ -158,15 +169,22 @@ $(function () {
         let scrollHeight = $(document).height();
         let windowHeight = $(window).height();
         if (scrollTop + windowHeight >= scrollHeight - 50) {
-            let table = $('.table')
-            let page_url = table.data('page')
+            let file_list = $('.file-list')
+            let page_url = file_list.data('page')
             if (page_url && !window.load_url[page_url]) {
                 window.load_url[page_url] = page_url
                 $('.loading').removeClass('d-none')
                 $.get(window.page_url, {'page': window.btoa(page_url)}, function (data) {
-                    table.find('tbody').append(data['html'])
-                    table.data('page', data['page_url'])
+                    if (file_list.hasClass('table')) {
+                        file_list.find('tbody').append(data['html'])
+                    } else {
+                        file_list.append(data['html'])
+                    }
+                    file_list.data('page', data['page_url'])
                     $('.loading').addClass('d-none')
+                    if (file_list.justifiedGallery) {
+                        $('.justified-gallery').justifiedGallery('norewind');
+                    }
                 });
             }
         }

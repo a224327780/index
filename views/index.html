@@ -11,8 +11,13 @@
 <link rel="stylesheet" href="/static/main.css?v=2">
 <link rel="shortcut icon" href=https://cdn.jsdelivr.net/gh/a224327780/oneadmin@{{static_version}}/static/favicon.png>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@1.11.0/dist/jquery.min.js"></script>
-<script type="text/javascript" src="/static/main.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/dplayer@1.26.0/dist/DPlayer.min.js"></script>
+% if m == 'grid':
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css">
+<script>$(function () {
+    $('.justified-gallery').justifiedGallery({margins : 3, 'lastRow': 'justify', rowHeight : 320});
+})</script>
+% end
 <title>OneIndex</title>
 <style>
     @font-face {
@@ -76,16 +81,16 @@
                     <div class="column col-7">
                         <div class="btn-group">
                             <input type="file" id="btn_file" style="display:none">
-                            <a data-href="{{!url_join(request.url, {'a': 'upload'})}}" class="btn btn-dark btn-lg upload-btn">上传文件</a>
+                            <a data-href="{{!url_join(request.url, {'a': 'upload'})}}" class="btn btn-primary btn-lg upload-btn">上传文件</a>
                             <a title="创建文件夹" data-href="{{!url_join(request.url, {'a': 'folder'})}}" class="btn btn-danger btn-lg ajax-modal">新建文件夹</a>
-                            <a data-modal-size="md" title="Rclone配置文件" data-href="{{!url_join(request.url, {'a': 'rclone'})}}" class="btn btn-primary btn-lg ajax-modal">rclone</a>
+                            <a data-modal-size="md" title="Rclone配置文件" data-href="{{!url_join(request.url, {'a': 'rclone'})}}" class="btn btn-dark btn-lg ajax-modal">rclone</a>
                         </div>
                     </div>
                 </div>
                 <progress class="progress d-none" value="0" max="100"></progress>
                 % if type(items) == list:
                 % if not m or m == 'list':
-                <table class="table" data-page="{{page_url}}" data-view="{{m}}">
+                <table class="table file-list" data-page="{{page_url}}">
                     <thead>
                     <tr>
                         <th>文件名</th>
@@ -98,10 +103,11 @@
                     </tbody>
                 </table>
                 % else:
-                <div class="columns grid-items">
+                <div class="file-list justified-gallery" data-page="{{page_url}}">
                     % include('data/grid.html', items=items)
                 </div>
                 % end
+                <div class="loading loading-lg d-none"></div>
                 % else:
                 <div class="empty">
                     <p class="empty-title h5">用户未开通OneDrive</p>
@@ -110,8 +116,7 @@
             </div>
         </div>
     </div>
-</div>
-<div class="modal" id="modal">
+    <div class="modal" id="modal">
     <a href="javascript:void(0);" class="modal-overlay btn-clear" aria-label="Close"></a>
     <div class="modal-container">
         <div class="modal-header">
@@ -124,7 +129,7 @@
         </div>
     </div>
 </div>
-% import json
-<script>console.log({{!json.dumps(items)}});</script>
+</div>
+<script type="text/javascript" src="/static/main.js"></script>
 </body>
 </html>

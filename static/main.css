@@ -213,14 +213,19 @@ a:visited {
     cursor: pointer;
 }
 
-.grid-items .column {
-    margin-bottom: .8rem;
+.file-list {
+    margin-bottom: 1.5rem;
+}
+
+.file-list img {
+    max-width: 100%;
+    object-fit: cover;
 }
 
 .grid-items img {
-    width: 320px;
+    /*width: 320px;*/
     /*height: 320px;*/
-    /*max-width: 100%;*/
+    max-width: 100%;
     object-fit: cover;
 }
 
@@ -343,13 +348,13 @@ a:visited {
 
 .btn.btn-primary {
     color: #fff;
-    background: #1E9FFF;
-    border-color: #1E9FFF;
+    background: #00acac;
+    border-color: #00acac;
 }
 
 .btn.btn-primary:focus, .btn.btn-primary:hover {
-    background: #1E9FFF;
-    border-color: #1E9FFF;
+    background: #00acac;
+    border-color: #00acac;
     color: #fff;
     opacity: .8;
 }
