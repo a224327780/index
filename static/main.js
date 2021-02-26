@@ -141,14 +141,13 @@ $(function () {
 
     $(document).on('click', '.file-item.video', function () {
         let $this = $(this);
-        let $parent = $this.parents('td')
         App.modal($this, "<div id=\"dplayer\"></div>", 'lg')
 
         function paly() {
             return new DPlayer({
                 container: document.getElementById('dplayer'),
                 video: {
-                    url: $parent.attr('id'),
+                    url: $this.data('url'),
                 },
                 autoplay: true
             });

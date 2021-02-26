@@ -1,7 +1,7 @@
 % from src.common import url_join
 % for item in items:
 <tr>
-    <td class="text-left" id="{{item.get('@microsoft.graph.downloadUrl')}}">
+    <td class="text-left">
         % if item.get('folder'):
         <svg viewBox="0 0 48 48" class="svg-icon">
             <path class="svg-folder-icon-bg" d="M40 12H22l-4-4H8c-2.2 0-4 1.8-4 4v8h40v-4c0-2.2-1.8-4-4-4z"></path>
@@ -10,7 +10,7 @@
         </svg>
         <a href="{{item['url']}}">{{item['name']}}</a>
         % else:
-        <span title="{{item['name']}}" class="file-item {{item['meta']['type']}}"><svg viewBox="0 0 24 24" class="svg-icon svg-icon-{{item['meta']['type']}}">
+        <span data-url="{{item.get('@microsoft.graph.downloadUrl')}}" title="{{item['name']}}" class="file-item {{item['meta']['type']}}"><svg viewBox="0 0 24 24" class="svg-icon svg-icon-{{item['meta']['type']}}">
             <path d="{{item['meta']['svg']}}"></path>
         </svg>{{item['name']}}</span>
         <div class="">

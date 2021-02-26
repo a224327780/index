@@ -217,6 +217,11 @@ a:visited {
     margin-bottom: 1.5rem;
 }
 
+.file-item {
+    display: block;
+    cursor: pointer;
+}
+
 .file-list img {
     max-width: 100%;
     object-fit: cover;
