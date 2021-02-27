@@ -86,8 +86,10 @@ $(function () {
                 $this.addClass('loading')
             },
             error: function (jqXHR, statusText, error) {
-                let data = JSON.parse(jqXHR.responseText)
-                App.tip(data['msg'], 5000);
+                // let data = JSON.parse(jqXHR.responseText)
+                // App.tip(data['msg'], 5000);
+                console.log(statusText)
+                console.log(error)
                 $this.removeClass('loading')
             },
             success: function (result) {

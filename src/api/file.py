@@ -1,4 +1,5 @@
 import base64
+import json
 from datetime import datetime
 
 from bottle import request, redirect
@@ -37,7 +38,7 @@ def file_index(one_drive: OneDrive):
         view_name = 'grid' if m == 'grid' else 'list'
         html = IndexApp.render(f'data/{view_name}', items=items)
         return {'html': html, 'page_url': page_url}
-
+    # print(json.dumps(data, indent=4))
     return IndexApp.render('index', items=items, page_url=page_url)
 
 
@@ -60,8 +61,9 @@ def file_folder(one_drive: OneDrive):
         return IndexApp.render('folder')
 
     params = dict(request.query)
-    parent_folder = params.get('folder', '')
-    folder_name = request.forms.get('folder_name')
+    parent_folder = params.get('folder')
+
+    folder_name = request.forms.folder_name
     return one_drive.create_folder(parent_folder, folder_name, **params)
 
 
