@@ -15,7 +15,7 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css">
 <script>$(function () {
-    $('.justified-gallery').justifiedGallery({margins : 3, 'lastRow': 'justify', rowHeight : {{ 120 if name == 'hanzongyi' else 320}} });
+    $('.justified-gallery').justifiedGallery({margins : 3, 'lastRow': 'justify', rowHeight : {{ 120 if name != 'image01' else 320}} });
 })</script>
 % end
 <title>OneIndex</title>
