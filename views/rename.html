@@ -1,4 +1,5 @@
-<form method="post" action="{{!request.url}}">
+% from src.common import url_join
+<form method="post" action="{{!url_join(request.url, {'a': 'rename', 'org_name': org_name})}}">
     <div class="form-group">
         <input class="form-input" type="text" name="new_name" value="{{org_name}}">
     </div>
