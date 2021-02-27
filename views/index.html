@@ -86,6 +86,13 @@
                             <a data-modal-size="md" title="Rclone配置文件" data-href="{{!url_join(request.url, {'a': 'rclone'})}}" class="btn btn-dark btn-lg ajax-modal">rclone</a>
                         </div>
                     </div>
+                    <div class="column col-2 col-ml-auto text-right">
+                        <div class="input-group">
+                            <input value="{{request.query.get('wd', '')}}" class="form-input input-lg" type="text"
+                                   name="wd" placeholder="search...">
+                            <button data-href="{{!url_join(request.url, {'wd': ''})}}" class="btn btn-primary btn-lg input-group-btn btn-search">搜索</button>
+                        </div>
+                    </div>
                 </div>
                 <progress class="progress d-none" value="0" max="100"></progress>
                 % if type(items) == list:
