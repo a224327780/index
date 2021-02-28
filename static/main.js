@@ -141,6 +141,18 @@ $(function () {
         return false;
     });
 
+    $(document).on('keyup', '[name="wd"]', function (e) {
+        if (e.keyCode === 13) {
+            $('.btn-search').trigger('click')
+        }
+    })
+
+    $(document).on('click', '.btn-search', function () {
+        let $this = $(this);
+        let wd = $('[name="wd"]').val();
+        window.location.href = $this.data('href') + wd;
+    });
+
     $(document).on('click', '.file-item.video', function () {
         let $this = $(this);
         App.modal($this, "<div id=\"dplayer\"></div>", 'lg')

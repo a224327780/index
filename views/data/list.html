@@ -24,7 +24,7 @@
                 </svg>
             </a>
             % if not item.get('folder'):
-            <a href="{{item['@microsoft.graph.downloadUrl']}}">
+            <a href="{{item.get('@microsoft.graph.downloadUrl')}}">
                 <svg viewBox="0 0 24 24" class="svg-icon svg-icon-download">
                     <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"></path>
                 </svg>

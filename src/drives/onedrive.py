@@ -61,20 +61,24 @@ class OneDrive:
         return self.api(f'{drive}:/{file_name}:/content', method='PUT', data=file_data, timeout=300)
 
     def file_list(self, folder: str = None, **kwargs):
+        fields = kwargs.get('fields') or self.file_fields
+        drive = _get_drive(**kwargs)
+        params = {
+            '$select': fields,
+            '$top': kwargs.get('limit') or 20,
+            '$orderby': 'name desc'
+        }
+
+        wd = kwargs.get('wd')
+        if wd:
+            wd = wd.encode('latin1').decode('utf-8')
+            params['$top'] = 100
+            return self.api(f"{drive}/search(q='{wd}')", params)
+
         dest = '/children'
         if folder and folder != '/':
             dest = ':/{}:/children'.format(folder.strip('/'))
-
-        drive = _get_drive(**kwargs)
-        fields = kwargs.get('fields') or self.file_fields
-
-        params = {
-            'select': fields,
-            '$top': kwargs.get('limit') or 20,
-            '$expand': 'thumbnails($select=large)',
-            '$orderby': 'name desc'
-        }
-        # '$expand': 'thumbnails($select=large)'
+        params['$expand'] = 'thumbnails($select=large)'
         return self.api(f'{drive}{dest}', params)
 
     def delete_file(self, file: str, **kwargs):

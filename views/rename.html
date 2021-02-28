@@ -1,7 +1,7 @@
 % from src.common import url_join
 <form method="post" action="{{!url_join(request.url, {'a': 'rename', 'org_name': org_name})}}">
     <div class="form-group">
-        <input class="form-input" type="text" name="new_name" value="{{org_name}}">
+        <textarea rows="5" name="new_name">{{org_name}}</textarea>
     </div>
     <div class="form-group">
         <button type="button" class="btn btn-block btn-danger btn-lg submit">更新</button>
