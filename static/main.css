@@ -187,6 +187,9 @@ a:visited {
     -ms-flex: 1 1 auto;
     flex: 1 1 auto;
 }
+.right .content{
+    margin: 0 1rem;
+}
 
 .navbar {
     background: #ecf0f2;
@@ -302,7 +305,8 @@ a:visited {
 }
 
 .toolbar {
-    padding: 1rem 0 2rem 0;
+    padding: 1rem 0;
+    background: transparent;
 }
 
 .tab + .table {

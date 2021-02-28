@@ -75,52 +75,56 @@
                 <label>{{format_size(drive.get('used', 0))}} / {{format_size(drive['total'])}}</label>
             </section>
         </div>
-        <div class="container">
-            <div class="main-content">
-                <div class="columns toolbar">
-                    <div class="column col-7">
-                        <div class="btn-group">
-                            <input type="file" id="btn_file" style="display:none">
-                            <a data-href="{{!url_join(request.url, {'a': 'upload'})}}" class="btn btn-primary btn-lg upload-btn">上传文件</a>
-                            <a title="创建文件夹" data-href="{{!url_join(request.url, {'a': 'folder'})}}" class="btn btn-danger btn-lg ajax-modal">新建文件夹</a>
-                            <a data-modal-size="md" title="Rclone配置文件" data-href="{{!url_join(request.url, {'a': 'rclone'})}}" class="btn btn-dark btn-lg ajax-modal">rclone</a>
-                        </div>
-                    </div>
-                    <div class="column col-5 col-ml-auto text-right">
-                        <div class="input-group">
-                            <input value="{{request.query.wd}}" class="form-input input-lg" type="text"
-                                   name="wd" placeholder="search...">
-                            <button data-href="{{!url_join(request.url, {'wd': ''})}}" class="btn btn-primary btn-lg input-group-btn btn-search">搜索</button>
-                        </div>
+        <div class="content">
+            <div class="navbar toolbar">
+                <div class="navbar-section">
+                    <div class="btn-group">
+                        <input type="file" id="btn_file" style="display:none">
+                        <a data-href="{{!url_join(request.url, {'a': 'upload'})}}"
+                           class="btn btn-primary btn-lg upload-btn">上传文件</a>
+                        <a title="创建文件夹" data-href="{{!url_join(request.url, {'a': 'folder'})}}"
+                           class="btn btn-danger btn-lg ajax-modal">新建文件夹</a>
+                        <a data-modal-size="md" title="Rclone配置文件"
+                           data-href="{{!url_join(request.url, {'a': 'rclone'})}}"
+                           class="btn btn-dark btn-lg ajax-modal">rclone</a>
                     </div>
                 </div>
-                <progress class="progress d-none" value="0" max="100"></progress>
-                % if type(items) == list:
-                % if not m or m == 'list':
-                <table class="table file-list" data-page="{{page_url}}">
-                    <thead>
-                    <tr>
-                        <th>文件名</th>
-                        <th>修改时间</th>
-                        <th>大小</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    % include('data/list.html', items=items)
-                    </tbody>
-                </table>
-                % else:
-                <div class="file-list justified-gallery" data-page="{{page_url}}">
-                    % include('data/grid.html', items=items)
+                <div class="navbar-section">
+                    <div class="input-group">
+                        <input value="{{request.query.wd}}" class="form-input input-lg" type="text"
+                               name="wd" placeholder="search...">
+                        <button data-href="{{!url_join(request.url, {'wd': ''})}}"
+                                class="btn btn-primary btn-lg input-group-btn btn-search">搜索
+                        </button>
+                    </div>
                 </div>
-                % end
-                <div class="loading loading-lg d-none"></div>
-                % else:
-                <div class="empty">
-                    <p class="empty-title h5">用户未开通OneDrive</p>
-                </div>
-                %end
             </div>
+            <progress class="progress d-none" value="0" max="100"></progress>
+            % if type(items) == list:
+            % if not m or m == 'list':
+            <table class="table file-list" data-page="{{page_url}}">
+                <thead>
+                <tr>
+                    <th>文件名</th>
+                    <th>修改时间</th>
+                    <th>大小</th>
+                </tr>
+                </thead>
+                <tbody>
+                % include('data/list.html', items=items)
+                </tbody>
+            </table>
+            % else:
+            <div class="file-list justified-gallery" data-page="{{page_url}}">
+                % include('data/grid.html', items=items)
+            </div>
+            % end
+            <div class="loading loading-lg d-none"></div>
+            % else:
+            <div class="empty">
+                <p class="empty-title h5">用户未开通OneDrive</p>
+            </div>
+            %end
         </div>
     </div>
     <div class="modal" id="modal">
