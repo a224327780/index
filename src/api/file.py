@@ -19,7 +19,7 @@ def file_index(one_drive: OneDrive):
         data = one_drive.api(page)
     else:
         data = one_drive.file_list(**params)
-    print(json.dumps(data, indent=4))
+    # print(json.dumps(data, indent=4))
     items = []
     for item in data['value']:
         item['lastModifiedDateTime'] = str(datetime.strptime(item['lastModifiedDateTime'], '%Y-%m-%dT%H:%M:%SZ'))
