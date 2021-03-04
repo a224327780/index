@@ -147,7 +147,7 @@ class IndexApp:
         drives = cls.get_drives()
         kwargs.setdefault('drives', drives)
         html = template(f'{tpl_name}.html', **kwargs)
-        if not request.is_ajax and not request.query.get('a'):
+        if not request.is_ajax and not request.query.get('a') and tpl_name != '500':
             html = re.sub(r'(\r?\n)', '', html)
             html = re.sub(r'>\s{2,}<', '><', html)
         return html.strip()

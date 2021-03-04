@@ -5,6 +5,8 @@ from bottle import request, static_file, default_app, redirect
 
 from src.common import IndexApp, run_route
 
+global DEBUG
+
 DEFAULT_FORMATTER = '%(asctime)s[%(filename)s:%(lineno)d][%(levelname)s]:%(message)s'
 logging.basicConfig(format=DEFAULT_FORMATTER, level=logging.INFO)
 
@@ -62,6 +64,11 @@ def file(name, path=None):
 def error404(e1):
     return '<html><head><title>404 Not Found</title></head><body><center>' \
            '<h1>404 Not Found</h1></center><hr><center> nginx</center></body></html>'
+
+
+@app.error(500)
+def error500(e1):
+    return IndexApp.render('500', e=e1)
 
 
 if __name__ == '__main__':
