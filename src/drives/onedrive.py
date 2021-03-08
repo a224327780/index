@@ -24,7 +24,7 @@ class OneDrive:
         self._auth_url = 'https://login.microsoftonline.com/{}/oauth2/v2.0/authorize'
         self._token_url = 'https://login.microsoftonline.com/{}/oauth2/v2.0/token'
         self.access_token = None
-        self._redirect_uri = 'https://oneindex.atcaoyufei.workers.dev'
+        self._redirect_uri = 'https://oauth.atcaoyufei.workers.dev'
         self.scope = 'offline_access User.Read Sites.ReadWrite.All'
         self.logger = logging.getLogger(self.__class__.__name__)
         self.file_fields = 'id, name, size, folder, audio, video, photo, image, lastModifiedDateTime, @microsoft.graph.downloadUrl'
