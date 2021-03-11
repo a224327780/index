@@ -285,7 +285,7 @@ a:visited {
     cursor: pointer;
 }
 
-.table td a {
+.table td.td-action a {
     padding: 0 5px
 }
 
