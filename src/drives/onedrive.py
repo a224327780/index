@@ -65,8 +65,8 @@ class OneDrive:
         drive = _get_drive(**kwargs)
         params = {
             'select': fields,
-            '$top': kwargs.get('limit') or 20,
-            '$orderby': 'name desc'
+            '$top': kwargs.get('limit') or 30,
+            # '$orderby': 'createdDateTime desc'
         }
 
         wd = kwargs.get('wd')
