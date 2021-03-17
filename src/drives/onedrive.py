@@ -66,7 +66,7 @@ class OneDrive:
         params = {
             'select': fields,
             '$top': kwargs.get('limit') or 30,
-            # '$orderby': 'createdDateTime desc'
+            '$orderby': 'name desc'
         }
 
         wd = kwargs.get('wd')
