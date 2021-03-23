@@ -63,7 +63,7 @@ def file_folder(one_drive: OneDrive):
     params = dict(request.query)
     parent_folder = params.get('folder')
 
-    folder_name = request.forms.post_data
+    folder_name = request.forms.folder_name
     return one_drive.create_folder(parent_folder, folder_name, **params)
 
 
@@ -81,7 +81,7 @@ def file_rename(one_drive: OneDrive):
 def file_upload(one_drive: OneDrive):
     params = dict(request.query)
     upload = request.files.get('file')
-    folder = request.query.get('folder')
+    folder = params.get('folder')
     # file = Path(upload.file.name)
     # print(file.stat().st_size)
     # print(upload.file.name)
