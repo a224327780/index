@@ -81,10 +81,14 @@ def file_rename(one_drive: OneDrive):
 def file_upload(one_drive: OneDrive):
     params = dict(request.query)
     upload = request.files.get('file')
+    folder = request.query.get('folder')
     # file = Path(upload.file.name)
     # print(file.stat().st_size)
     # print(upload.file.name)
-    return one_drive.upload_file(upload.filename, upload.file.read(), **params)
+    filename = upload.filename
+    if folder:
+        filename = f'{folder.strip("/")}/{filename}'
+    return one_drive.upload_file(filename, upload.file.read(), **params)
 
 
 def file_rclone(one_drive: OneDrive):
