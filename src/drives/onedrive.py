@@ -27,7 +27,7 @@ class OneDrive:
         self._redirect_uri = 'https://oauth.atcaoyufei.workers.dev'
         self.scope = 'offline_access User.Read Sites.ReadWrite.All'
         self.logger = logging.getLogger(self.__class__.__name__)
-        self.file_fields = 'id, name, size, folder, audio, video, photo, image, lastModifiedDateTime, @microsoft.graph.downloadUrl'
+        self.file_fields = 'id, name, size, folder, audio, video, photo, image, lastModifiedDateTime, @microsoft.graph.downloadUrl, parentReference'
         self.default_client_id = ''
         self.default_client_secret = ''
 
@@ -92,6 +92,13 @@ class OneDrive:
     def rename_file(self, file: str, new_file: str, **kwargs):
         drive = _get_drive(**kwargs)
         json_data = {'name': new_file}
+        return self.api(f'{drive}:/{file}', json=json_data, method='PATCH')
+
+    def move_file(self, file: str, parent: str, new_name=None, **kwargs):
+        drive = _get_drive(**kwargs)
+        if not new_name:
+            new_name = file
+        json_data = {'parentReference': {'id': parent}, 'name': new_name}
         return self.api(f'{drive}:/{file}', json=json_data, method='PATCH')
 
     def create_folder(self, parent_folder: str, folder_name: str, **kwargs):
