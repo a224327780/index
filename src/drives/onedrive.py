@@ -53,6 +53,17 @@ class OneDrive:
         api_params = {'search': '*', '$top': 30, '$select': '*'}
         return self.api('/sites', api_params)
 
+    def site_root(self):
+        return self.api('/sites/root')
+
+    def get_site(self, site_name):
+        data = self.site_root()
+        if data.get('siteCollection'):
+            hostname = data.get('siteCollection').get('hostname')
+            api = f'/sites/{hostname}:/sites/{site_name}'
+            return self.api(api)
+        return None
+
     def user_info(self):
         return self.api('/me')
 

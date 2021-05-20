@@ -32,20 +32,14 @@ def install_auth(one_drive: OneDrive):
     code = request.query.get('code')
     one_data = one_drive.fetch_token(code=code, **data)
 
-    if data['drive_type'] == 'SharePoint':
-        one_drive.access_token = one_data['access_token']
-        result = one_drive.site_list()['value']
-        for site in result:
-            if f'sites/{data["site_id"]}' in site['webUrl']:
-                one_data['site_id'] = site['id']
-                break
-
     one_drive.access_token = one_data.get('access_token')
     user_info = one_drive.user_info()
 
     if data.get('drive_type') == 'OneDrive':
         drive_data = one_drive.get_drive()
     else:
+        site = one_drive.get_site(name)
+        one_data['site_id'] = site['id']
         drive_data = one_drive.get_site_drive(one_data['site_id'])
 
     IndexApp.save_token(name, one_data, {'username': user_info['userPrincipalName'], 'drive_id': drive_data['id'],
