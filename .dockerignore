@@ -1,0 +1,6 @@
+.github*
+README.md
+LICENSE
+okteto-stack.yml
+vercel.json
+.gitignore

@@ -3,6 +3,8 @@ name: OneIndex
 on:
   push:
     branches: [ master ]
+    paths-ignore:
+      - '.dockerignore'
 
 jobs:
   build:
