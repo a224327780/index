@@ -3,4 +3,3 @@ pymongo
 pymongo[srv]
 python-dotenv
 requests
-Werkzeug
