@@ -1,17 +1,9 @@
-from bottle import default_app
+from flask import Flask, Response
 
-app = default_app
-
-
-@app.route('/favicon.ico', method='GET')
-def favicon():
-    return ''
+app = Flask(__name__)
 
 
-@app.route('/')
-def index():
-    return 'home'
-
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def catch_all(path):
+    return Response("<h1>Flask</h1><p>You visited: /%s</p>" % (path), mimetype="text/html")
