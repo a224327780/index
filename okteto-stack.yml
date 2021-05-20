@@ -1,6 +1,6 @@
 name: oneindex
 services:
-  api:
+  oneindex:
     public: true
     image: caoyufei/oneindex
     replicas: 1
