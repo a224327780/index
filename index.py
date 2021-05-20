@@ -1,4 +1,5 @@
 import logging
+import os
 
 from bottle import request, static_file, default_app, redirect, response
 
@@ -29,6 +30,16 @@ def enable_cors():
 @app.route('/static/<filename:path>')
 def send_static(filename):
     return static_file(filename, root='static')
+
+
+@app.route('/favicon.ico', method='GET')
+def favicon():
+    return ''
+
+
+@app.route('/env', method='GET')
+def env():
+    return dict(os.environ.items())
 
 
 @app.route('/', method='GET')
