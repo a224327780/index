@@ -1,0 +1,10 @@
+name: oneindex
+services:
+  api:
+    public: true
+    image: caoyufei/oneindex
+    replicas: 1
+    environment:
+      - MONGO_URI=${MONGO_URI}
+    ports:
+      - 8080
