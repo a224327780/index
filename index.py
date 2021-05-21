@@ -1,10 +1,9 @@
 import logging
 import os
 
-from bottle import request, static_file, default_app, redirect, response
+from bottle import request, static_file, default_app, redirect, response, auth_basic
 
 from src.common import IndexApp, run_route
-
 
 DEFAULT_FORMATTER = '%(asctime)s[%(filename)s:%(lineno)d][%(levelname)s]:%(message)s'
 logging.basicConfig(format=DEFAULT_FORMATTER, level=logging.INFO)
@@ -17,6 +16,14 @@ except Exception as e:
     logging.debug(e)
 
 app = default_app()
+
+
+def authenticated(user, password):
+    auth_user = os.environ.get('AUTH_USERNAME', 'root')
+    auth_pwd = os.environ.get('AUTH_PASSWORD')
+    if user != auth_user or password != auth_pwd:
+        return False
+    return True
 
 
 @app.hook('after_request')
@@ -37,11 +44,13 @@ def favicon():
 
 
 @app.route('/envs', method='GET')
+@auth_basic(authenticated)
 def env():
     return dict(os.environ.items())
 
 
 @app.route('/', method='GET')
+@auth_basic(authenticated)
 def index():
     drives = IndexApp.get_drives()
     if len(drives):
@@ -60,6 +69,7 @@ def install(action=None, name=None):
 
 @app.route('/:name', method=['GET', 'POST'])
 @app.route('/:name/<path:path>', method=['GET', 'POST'])
+@auth_basic(authenticated)
 def file(name, path=None):
     request.query['name'] = name
     action = 'index'
