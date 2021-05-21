@@ -21,7 +21,7 @@ app = default_app()
 def authenticated(user, password):
     auth_user = os.environ.get('AUTH_USERNAME')
     auth_pwd = os.environ.get('AUTH_PASSWORD')
-    logging.info(f'{user}:{password}')
+    logging.info(f'{user}:{password} {auth_user}:{auth_pwd}')
     if user != auth_user or password != auth_pwd:
         return False
     return True
