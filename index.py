@@ -43,7 +43,7 @@ def favicon():
     return ''
 
 
-@app.route('/envs', method='GET')
+@app.route('/env1', method='GET')
 @auth_basic(authenticated)
 def env():
     return dict(os.environ.items())
