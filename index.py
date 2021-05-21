@@ -44,7 +44,6 @@ def favicon():
 
 
 @app.route('/env1', method='GET')
-@auth_basic(authenticated)
 def env():
     return dict(os.environ.items())
 
@@ -61,6 +60,7 @@ def index():
 
 @app.route('/install', method=['GET', 'POST'])
 @app.route('/install/:action/:name', method=['GET', 'POST'])
+@auth_basic(authenticated)
 def install(action=None, name=None):
     if name:
         request.query['name'] = name
