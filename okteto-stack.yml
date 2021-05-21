@@ -7,5 +7,6 @@ services:
     environment:
       - MONGO_URI=${MONGO_URI}
       - AUTH_PASSWORD=${AUTH_PASSWORD}
+      - AUTH_USERNAME=${AUTH_USERNAME}
     ports:
       - 8080
